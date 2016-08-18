@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Hangman</title>
+  <title>Pokemon RPG</title>
   <link rel="stylesheet" href="assets/css/reset.css">
   <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
@@ -12,10 +12,37 @@
 <body>
   <div class="container">
     <div class="row">
-      
+      <h1 class="text-center">POKEMON RPG</h1>
+      <div class="col-md-12 rpg-select-wrapper">
+        <div class="row">
+          <h2 class="text-center">Choose Your Pokemon!</h2>
+          <ul class="rpg-select"></ul>
+        </div>
+      </div>
+      <div class="col-md-6 rpg-active-wrapper">
+        <div class="row">
+          <h2 class="text-center">Your Pokemon</h2>
+          <div class="col-md-11 rpg-active-alert alert alert-success alert-dismissible"></div>
+          <ul class="rpg-active"></ul>
+        </div>
+      </div>
+      <div class="col-md-6 rpg-defender-wrapper">
+        <div class="row">
+          <h2 class="text-center">Defending Pokemon</h2>
+          <div class="col-md-11 rpg-active-alert alert alert-danger alert-dismissible"></div>
+          <ul class="rpg-defender"></ul>
+        </div>
+      </div>
+      <div class="col-md-12 rpg-inactive-wrapper">
+        <div class="row">
+          <h3 class="text-center">Choose Defending Pokemon</h3>
+          <ul class="rpg-inactive"></ul>
+        </div>
+      </div>
     </div>
   </div>
 </body>
 <script src="assets/vendor/jquery/jquery-3.1.0.min.js"></script>
+<script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/js/game.js"></script>
 </html>

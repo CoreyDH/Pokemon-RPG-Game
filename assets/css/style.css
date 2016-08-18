@@ -1,0 +1,100 @@
+/* General */
+.pokemon {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin:5px;
+  background-color: #fff;
+}
+.table {
+  margin-bottom: 0;
+}
+.pokemon td {
+  text-transform: capitalize;;
+}
+.pokemon-table tr:first-child td {
+  border-top: 0;
+}
+.pointer {
+  cursor:pointer;
+}
+.rpg-image {
+  min-height: 115px;
+}
+.rpg-moves td {
+  padding: 3px;
+}
+.rpg-moves-head {
+  color: #f1f1f1;
+  background-color: #3c3c3c;
+  font-weight: 600;
+}
+.rpg-hp {
+  font-size: 20px;
+}
+
+/* Selection */
+.rpg-select li {
+  width: 23%;
+}
+.rpg-select li:hover {
+  border: 1px solid #00963a;
+}
+.rpg-select img {
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+
+/* Active */
+.rpg-active li {
+  width: 90%;
+}
+.rpg-active li:hover {
+  border: 1px solid #00963a;
+}
+.rpg-active img {
+  height: 300px;
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+
+/* Defending */
+.rpg-defender li {
+  width: 90%;
+}
+.rpg-defender li:hover {
+  border: 1px solid #ff0000;
+}
+.rpg-defender img {
+  height: 300px;
+}
+.rpg-defender .rpg-moves a {
+  background-color: #bd3e3e;
+  border-color: #ab2020;
+}
+.rpg-defender .rpg-moves a:hover {
+  background-color: #ab2020;
+}
+
+/* Inactive */
+.rpg-inactive-wrapper h3 {
+  background-color: #ddd;
+  padding: 10px 0;
+}
+.rpg-inactive li {
+  padding: 10px;
+  width: 32%;
+}
+.rpg-inactive li img {
+  height: 100px;
+}
+.rpg-inactive li:hover {
+  border: 1px solid #ff0000;
+}
