@@ -1,9 +1,25 @@
 /* General */
+body {
+  background-image: url(../images/bg.jpg);
+  background-size: cover;
+  background-position: center center;
+}
 .pokemon {
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  border: 3px solid rgba(0,0,0,0);
+  border-radius: 5px;
   margin:5px;
+}
+.pokemon > table {
+  border-radius: 10px;
+}
+.pokemon td {
   background-color: #fff;
+}
+.pokemon > table > tbody > tr:first-child td {
+  background-color: rgba(0,0,0,0);
+}
+.pokemon > table > tbody > tr:first-child td:hover {
+  background-color: rgba(0,0,0,0.5);
 }
 .table {
   margin-bottom: 0;
@@ -25,7 +41,7 @@
 }
 .rpg-moves-head {
   color: #f1f1f1;
-  background-color: #3c3c3c;
+  background-color: #3c3c3c !important;
   font-weight: 600;
 }
 .rpg-hp {
@@ -39,13 +55,34 @@
 .rpg-settings select {
   color: #000;
 }
+.rpg-active-wrapper h2, .rpg-defender-wrapper h2 {
+  width: 50%;
+  color: #f1f1f1;
+  margin: auto;
+  padding:5px;
+  border-radius: 5px;
+  background: rgba(0,0,0,0.8);
+  margin-bottom: 5px;
+}
+.rpg-active-wrapper h4, .rpg-defender-wrapper h4 {
+  color: #fff;
+  padding:5px;
+  margin: auto;
+  width: 80%;
+  background: rgba(0,0,0,0.8);
+}
 
 /* Selection */
+.rpg-select-wrapper h2 {
+  color: #fff;
+  padding: 10px;
+  background-color: #21386e;
+}
 .rpg-select li {
   width: 23%;
 }
 .rpg-select li:hover {
-  border: 1px solid #00963a;
+  border: 3px solid #17e667;
 }
 .rpg-select img {
   -moz-transform: scaleX(-1);
@@ -61,7 +98,7 @@
   width: 90%;
 }
 .rpg-active li:hover {
-  border: 1px solid #00963a;
+  border: 3px solid #17e667;
 }
 .rpg-active img {
   height: 300px;
@@ -73,6 +110,7 @@
   -ms-filter: "FlipH";
 }
 .rpg-active-items {
+  background: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-bottom: 10px;
@@ -89,7 +127,7 @@
   width: 90%;
 }
 .rpg-defender li:hover {
-  border: 1px solid #ff0000;
+  border: 3px solid #ff0000;
 }
 .rpg-defender img {
   height: 300px;
@@ -103,19 +141,27 @@
 }
 
 /* Inactive */
+.rpg-inactive-wrapper {
+  background-color: #202e50;
+   border-radius: 5px;
+   margin-bottom: 10px;
+ }
+
 .rpg-inactive-wrapper h3 {
-  background-color: #ddd;
+  color: #fff;
+  background-color: #3e5ca9;
   padding: 10px 0;
 }
 .rpg-inactive li {
   padding: 10px;
   width: 32%;
+  background-color: #304371;
 }
 .rpg-inactive li img {
   height: 100px;
 }
 .rpg-inactive li:hover {
-  border: 1px solid #ff0000;
+  background-color: #65749a;
 }
 
 @media screen and (max-width: 960px) {

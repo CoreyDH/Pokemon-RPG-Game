@@ -511,7 +511,7 @@
 
         } else {
 
-          $('.rpg-defender').empty().html('<h2>Please Choose Another Pokemon to Fight</h2>');
+          $('.rpg-defender').empty().html('<h4 class="text-center">Please Choose Another Pokemon to Fight</h4>');
           $('.rpg-inactive-wrapper').slideToggle();
 
         }
@@ -547,7 +547,7 @@
         this.unloadItemsEvents();
         this.loadRestartEvent();
 
-        $('.rpg-active-alert').html(this.activePokemon[0].name+' has fainted! You lose. <button type="button">Try again?</button>');
+        $('.rpg-active-alert').html(this.activePokemon[0].name+' has fainted! You lose. <button type="button">Try again</button> ?');
 
       },
 
@@ -557,7 +557,7 @@
         this.unloadItemsEvents();
         this.loadRestartEvent();
 
-        $('.rpg-active-alert').html(this.activePokemon[0].name+' has defeated all pokemon! You win!  <button type="button">Play again?</button>');
+        $('.rpg-active-alert').html(this.activePokemon[0].name+' has defeated all pokemon! You win!  <button type="button">Play again</button> ?');
 
       },
 
