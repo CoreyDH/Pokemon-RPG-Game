@@ -159,8 +159,8 @@
         this.activePokemon = [];
         this.defendingPokemon = [];
         this.items = {
-          potion: parseInt($( "#potions" ).val()),
-          ether: parseInt($( "#ethers" ).val())
+          potion: 10,
+          ether: 3
         };
 
         this.reset();
