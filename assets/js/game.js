@@ -49,7 +49,7 @@
           hp: 510,
           maxHP: 510,
           attack: 45,
-          defense: 100,
+          defense: 80,
           moves: [
             {
               name: 'Tackle',
@@ -84,7 +84,7 @@
           hp: 500,
           maxHP: 500,
           attack: 63,
-          defense: 80,
+          defense: 70,
           moves: [
             {
               name: 'Bite',
@@ -143,7 +143,7 @@
               power: 150,
               pp: 5,
               maxPP: 5,
-              accuracy: 90,
+              accuracy: 90
             },
           ]
         },
@@ -196,7 +196,7 @@
           for(var j=0; j < obj[i].moves.length; j++) {
 
             var $moves = $('#'+obj[i].name).find('.rpg-moves');
-            $moves.append('<tr><td class="col-md-4" id="rpg-'+obj[i].position+'-pp-'+j+'">'+obj[i].moves[j].pp+'</td><td class="col-md-8"><a id="'+obj[i].name+'-move-'+j+'" class="btn btn-primary btn-sm btn-block">'+obj[i].moves[j].name+'</a></td></tr>');
+            $moves.append('<tr><td class="col-md-4" id="rpg-'+obj[i].position+'-pp-'+j+'">'+obj[i].moves[j].pp+'</td><td class="col-md-8"><a id="rpg-'+obj[i].position+'-move-'+j+'" class="btn btn-primary btn-sm btn-block rpg-active-move">'+obj[i].moves[j].name+'</a></td></tr>');
 
           }
         }
@@ -217,8 +217,6 @@
         $items.append('<tr>');
         $items.find('tr').append(html);
 
-        this.loadItemsEvent();
-
       },
 
       loadItemsEvent: function() {
@@ -229,11 +227,11 @@
 
           if(self.items.potion > 0) {
             var healPercent = Math.floor((Math.random() * (100 - 90)) + 90)/100;
-            var healAmount = Math.floor(self.activePokemon[0].maxHp * healPercent);
+            var healAmount = Math.floor(self.activePokemon[0].maxHP * healPercent);
             var oldHp = self.activePokemon[0].hp;
             var $this = $(this);
 
-            self.activePokemon[0].hp += (self.activePokemon[0].hp+healAmount >= self.activePokemon[0].maxHp) ? self.activePokemon[0].maxHp - self.activePokemon[0].hp : healAmount;
+            self.activePokemon[0].hp += (self.activePokemon[0].hp+healAmount >= self.activePokemon[0].maxHP) ? self.activePokemon[0].maxHP - self.activePokemon[0].hp : healAmount;
             self.items.potion--;
             $this.siblings('a').html(self.items.potion);
 
@@ -254,19 +252,19 @@
           if(self.items.ether > 0) {
             var $this = $(this);
 
-            self.activePokemon[0].moves.forEach(function(item, index) {
+            self.activePokemon[0].moves.forEach(function(move, index) {
 
-
-              item.pp += 5;
+              move.pp += ((move.pp+5) >= move.maxPP) ? move.maxPP-move.pp : 5;
+              $('#rpg-active-pp-'+index).html(move.pp);
 
             });
-            self.activePokemon[0].hp += (self.activePokemon[0].hp+healAmount >= self.activePokemon[0].maxHp) ? self.activePokemon[0].maxHp - self.activePokemon[0].hp : healAmount;
-            self.items.potion--;
-            $this.siblings('a').html(self.items.potion);
 
-            $('.rpg-active-alert').html(self.activePokemon[0].name+' used a potion! It healed for '+(self.activePokemon[0].hp - oldHp));
+            self.items.ether--;
+            $this.siblings('a').html(self.items.ether);
+            $('.rpg-active-move').removeClass('disabled');
 
-            self.attack.displayHP(self.activePokemon[0]);
+            $('.rpg-active-alert').html(self.activePokemon[0].name+' used an ether! It restored all moves PP by 5!');
+
             self.attack.defender();
 
             if(self.items.ether === 0) {
@@ -330,6 +328,7 @@
 
           self.loadCharacters('.rpg-defender', self.defendingPokemon);
           self.loadMovesEvents(index);
+          self.loadItemsEvent();
 
         });
 
@@ -463,7 +462,7 @@
 
           if(move.pp === 0) {
             move.disabled = true;
-            $selector.addClass('disabled');
+            $('#rpg-'+position+'-move-'+index).addClass('disabled');
           }
 
         }
@@ -477,7 +476,7 @@
         $('.rpg-active').find('.rpg-moves').on('click', 'a', function() {
 
           var $this = $(this);
-          var index = $this.attr('id').split('-')[2];  // Set index
+          var index = $this.attr('id').split('-')[3];  // Set index
 
           self.attack.init(index);
 
