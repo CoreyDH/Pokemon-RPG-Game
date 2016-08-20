@@ -12,6 +12,7 @@
           image: 'pikachu.gif',
           type: 'lightning',
           hp: 450,
+          maxHP: 450,
           attack: 75,
           defense: 50,
           moves: [
@@ -20,6 +21,7 @@
               type: 'normal',
               power: 40,
               pp: 30,
+              maxPP: 30,
               accuracy: 100,
             },
             {
@@ -27,6 +29,7 @@
               type: 'lightning',
               power: 40,
               pp: 30,
+              maxPP: 30,
               accuracy: 100,
             },
             {
@@ -34,6 +37,7 @@
               type: 'lightning',
               power: 110,
               pp: 10,
+              maxPP: 10,
               accuracy: 70
             }
           ]
@@ -43,6 +47,7 @@
           image: 'onyx.gif',
           type: 'rock',
           hp: 510,
+          maxHP: 510,
           attack: 45,
           defense: 100,
           moves: [
@@ -51,6 +56,7 @@
               type: 'normal',
               power: 50,
               pp: 35,
+              maxPP: 35,
               accuracy: 100
             },
             {
@@ -58,6 +64,7 @@
               type: 'rock',
               power: 50,
               pp: 15,
+              maxPP: 15,
               accuracy: 90
             },
             {
@@ -65,6 +72,7 @@
               type: 'rock',
               power: 75,
               pp: 10,
+              maxPP: 10,
               accuracy: 90,
             }
           ]
@@ -74,6 +82,7 @@
           image: 'wartortle.gif',
           type: 'water',
           hp: 500,
+          maxHP: 500,
           attack: 63,
           defense: 80,
           moves: [
@@ -82,6 +91,7 @@
               type: 'dark',
               power: 60,
               pp: 25,
+              maxPP: 25,
               accuracy: 100
             },
             {
@@ -89,6 +99,7 @@
               type: 'water',
               power: 40,
               pp: 25,
+              maxPP: 25,
               accuracy: 100
             },
             {
@@ -96,6 +107,7 @@
               type: 'water',
               power: 110,
               pp: 5,
+              maxPP: 5,
               accuracy: 80,
             }
           ]
@@ -105,6 +117,7 @@
           image: 'snorlax.gif',
           type: 'normal',
           hp: 600,
+          maxHP: 600,
           attack: 50,
           defense: 65,
           moves: [
@@ -113,6 +126,7 @@
               type: 'normal',
               power: 70,
               pp: 20,
+              maxPP: 20,
               accuracy: 100
             },
             {
@@ -120,6 +134,7 @@
               type: 'normal',
               power: 85,
               pp: 15,
+              maxPP: 15,
               accuracy: 100,
             },
             {
@@ -127,6 +142,7 @@
               type: 'normal',
               power: 150,
               pp: 5,
+              maxPP: 5,
               accuracy: 90,
             },
           ]
@@ -139,10 +155,10 @@
       init: function() {
 
         this.pokemon = new Pokemon();
-        this.inactivePokemon = this.pokemon;
+        this.inactivePokemon = new Pokemon();
         this.activePokemon = [];
         this.defendingPokemon = [];
-        this.items = { potion: 3, ether: 2 };
+        this.items = { potion: 5, ether: 3 };
 
         this.reset();
         this.loadItems();
@@ -157,6 +173,7 @@
         $('.rpg-defender').empty();
         $('.rpg-inactive').empty();
         $('.alert').empty();
+        $('.rpg-active-items').empty();
 
         $('.rpg-active-wrapper').hide();
         $('.rpg-defender-wrapper').hide();
@@ -200,15 +217,62 @@
         $items.append('<tr>');
         $items.find('tr').append(html);
 
+        this.loadItemsEvent();
+
       },
 
       loadItemsEvent: function() {
 
         var self = this;
 
-        $('#rpg-item-potion').on('click', function() {
+        $('.rpg-active-items').on('click', '#rpg-item-potion', function() {
+
+          if(self.items.potion > 0) {
+            var healPercent = Math.floor((Math.random() * (100 - 90)) + 90)/100;
+            var healAmount = Math.floor(self.activePokemon[0].maxHp * healPercent);
+            var oldHp = self.activePokemon[0].hp;
+            var $this = $(this);
+
+            self.activePokemon[0].hp += (self.activePokemon[0].hp+healAmount >= self.activePokemon[0].maxHp) ? self.activePokemon[0].maxHp - self.activePokemon[0].hp : healAmount;
+            self.items.potion--;
+            $this.siblings('a').html(self.items.potion);
+
+            $('.rpg-active-alert').html(self.activePokemon[0].name+' used a potion! It healed for '+(self.activePokemon[0].hp - oldHp));
+
+            self.attack.displayHP(self.activePokemon[0]);
+            self.attack.defender();
+
+            if(self.items.potion === 0) {
+              $this.addClass('disabled');
+            }
+          }
+
+        });
+
+        $('.rpg-active-items').on('click', '#rpg-item-ether', function() {
+
+          if(self.items.ether > 0) {
+            var $this = $(this);
+
+            self.activePokemon[0].moves.forEach(function(item, index) {
 
 
+              item.pp += 5;
+
+            });
+            self.activePokemon[0].hp += (self.activePokemon[0].hp+healAmount >= self.activePokemon[0].maxHp) ? self.activePokemon[0].maxHp - self.activePokemon[0].hp : healAmount;
+            self.items.potion--;
+            $this.siblings('a').html(self.items.potion);
+
+            $('.rpg-active-alert').html(self.activePokemon[0].name+' used a potion! It healed for '+(self.activePokemon[0].hp - oldHp));
+
+            self.attack.displayHP(self.activePokemon[0]);
+            self.attack.defender();
+
+            if(self.items.ether === 0) {
+              $this.addClass('disabled');
+            }
+          }
 
         });
 
@@ -438,7 +502,7 @@
         this.unloadMovesEvents();
 
         $('.rpg-active-alert').html(this.defendingPokemon[0].name+' has fainted!');
-        console.log(this.inactivePokemon.length);
+
         if(this.inactivePokemon.length === 0) {
 
           this.win();
