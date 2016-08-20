@@ -138,11 +138,14 @@
 
       init: function() {
 
-        this.inactivePokemon = new Pokemon();
+        this.pokemon = new Pokemon();
+        this.inactivePokemon = this.pokemon;
         this.activePokemon = [];
         this.defendingPokemon = [];
+        this.items = { potion: 3, ether: 2 };
 
         this.reset();
+        this.loadItems();
         this.loadCharacters('.rpg-select', this.inactivePokemon);
         this.loadSelectEvent();
 
@@ -176,10 +179,39 @@
           for(var j=0; j < obj[i].moves.length; j++) {
 
             var $moves = $('#'+obj[i].name).find('.rpg-moves');
-            $moves.append('<tr><td class="col-md-4">'+obj[i].moves[j].pp+'</td><td class="col-md-8"><a id="#'+obj[i].name+'-move-'+j+'" class="btn btn-primary btn-sm btn-block">'+obj[i].moves[j].name+'</a></td></tr>');
+            $moves.append('<tr><td class="col-md-4" id="rpg-'+obj[i].position+'-pp-'+j+'">'+obj[i].moves[j].pp+'</td><td class="col-md-8"><a id="'+obj[i].name+'-move-'+j+'" class="btn btn-primary btn-sm btn-block">'+obj[i].moves[j].name+'</a></td></tr>');
 
           }
         }
+      },
+
+      loadItems: function() {
+
+        var $items = $('.rpg-active-items');
+        var html = '<td class="col-md-2 text-center">Your items</td>';
+        var self = this;
+
+        Object.keys(self.items).forEach(function(key) {
+          html += '<td class="col-md-5 text-center"><div class="btn-group"><a class="btn btn-default rpg-item">'+self.items[key]+'</a><a class="btn btn-success rpg-item" id="rpg-item-'+key+'">'+key+'</a></div></td>';
+
+        });
+
+
+        $items.append('<tr>');
+        $items.find('tr').append(html);
+
+      },
+
+      loadItemsEvent: function() {
+
+        var self = this;
+
+        $('#rpg-item-potion').on('click', function() {
+
+
+
+        });
+
       },
 
       loadInactive: function() {
@@ -239,6 +271,141 @@
 
       },
 
+      attack: {
+
+        init: function(index) {
+
+          this.index = index;
+          this.active();
+
+          if(game.defendingPokemon[0].hp < 0) {
+
+            game.unloadDefender();
+
+          } else {
+
+            this.defender();
+
+          }
+
+        },
+
+        active: function() {
+
+          var activeMove = game.activePokemon[0].moves[this.index]; // Specific move
+          var activeDmg = this.getDmg(game.activePokemon[0], game.defendingPokemon[0], activeMove);
+          var effective = '';
+
+          game.defendingPokemon[0].hp -= activeDmg;
+          this.drainPP(activeMove, game.activePokemon[0].position, this.index);
+          this.displayDmg(game.activePokemon[0], activeMove, activeDmg);
+          this.displayHP(game.defendingPokemon[0]);
+
+        },
+        defender: function() {
+
+          var defenderIndex = game.getRandomIndex(game.defendingPokemon[0].moves);
+          var defenderMove = game.defendingPokemon[0].moves[defenderIndex]; // Get random move
+          var defenderDmg = this.getDmg(game.defendingPokemon[0], game.activePokemon[0], defenderMove);
+
+          game.activePokemon[0].hp -= defenderDmg;
+          this.drainPP(defenderMove, game.defendingPokemon[0].position, defenderIndex);
+          this.displayDmg(game.defendingPokemon[0], defenderMove, defenderDmg);
+          this.displayHP(game.activePokemon[0]);
+
+          if(game.activePokemon[0].hp < 0) {
+
+            // Trigger loss
+            game.lose();
+          }
+
+        },
+
+        displayHP: function(pkmn) {
+
+          var selector = '.rpg-'+pkmn.position+'-wrapper';
+          var $hp = $(selector).find('.rpg-hp');
+
+          $hp.html(pkmn.hp);
+
+        },
+
+        getDmg: function (pkmn1, pkmn2, move) {
+
+          var hitChance = move.accuracy;
+          var hit = Math.floor(Math.random()*100) + 1;
+
+          // If miss, 0 damage returned
+          if(hitChance <= hit)
+            return 0;
+
+          var rand = Math.random()*(1-0.85) + 0.85;
+          var typeMod;
+
+          switch(true) {
+
+            default:
+              typeMod = 1;
+              break;
+
+            case (move.type === 'lightning' && pkmn2.type === 'water') :
+              typeMod = 2;
+              break;
+
+            case (move.type === 'water' && pkmn2.type === 'lightning') :
+              typeMod = 0.5;
+              break;
+
+            case (move.type === 'rock' && pkmn2.type === 'lightning') :
+              typeMod = 2;
+              break;
+
+            case (move.type === 'lightning' && pkmn2.type === 'rock') :
+              typeMod = 0.5;
+              break;
+
+            case (move.type === 'water' && pkmn2.type === 'rock') :
+              typeMod = 2;
+              break;
+
+            case (move.type === 'normal' && pkmn2.type === 'rock') :
+              typeMod = 0.5;
+              break;
+
+          }
+
+          var modifier = typeMod * rand;
+          var dmg = Math.floor(((pkmn1.attack/pkmn2.defense) * move.power + 2) * modifier); // formula from wiki
+
+          return dmg;
+
+        },
+
+        displayDmg: function(pkmn, move, dmg) {
+
+          var selector = '.rpg-'+pkmn.position+'-wrapper';
+          var msg = pkmn.name+' used '+move.name+'. ';
+
+          msg += dmg > 0 ? 'It did '+dmg+' damage!' : 'It missed!';
+          $(selector).find('.rpg-'+pkmn.position+'-alert').html(msg);
+
+        },
+
+        drainPP: function(move, position, index) {
+
+          move.pp--;
+          var $selector = $('#rpg-'+position+'-pp-'+index);
+          $selector.html(move.pp);
+
+          if(move.pp === 0) {
+            move.disabled = true;
+            $selector.addClass('disabled');
+          }
+
+        }
+
+      },
+
       loadMovesEvents: function(index) {
 
         var self = this;
@@ -247,118 +414,8 @@
 
           var $this = $(this);
           var index = $this.attr('id').split('-')[2];  // Set index
-          var defenderIndex = self.getRandomIndex(self.defendingPokemon[0].moves);
 
-          var activeMove = self.activePokemon[0].moves[index]; // Specific move
-          var defenderMove = self.defendingPokemon[0].moves[defenderIndex]; // Get random move
-
-          var activeDmg = getDmg(self.activePokemon[0], self.defendingPokemon[0], activeMove);
-          var defenderDmg = getDmg(self.defendingPokemon[0], self.activePokemon[0], defenderMove);
-          var effective = '';
-
-          self.defendingPokemon[0].hp -= activeDmg;
-          drainPP(activeMove);
-          displayDmg(self.activePokemon[0], activeMove, activeDmg);
-          displayHP(self.defendingPokemon[0]);
-
-          if(self.defendingPokemon[0].hp < 0) {
-
-            self.unloadDefender();
-
-          } else {
-
-            self.activePokemon[0].hp -= defenderDmg;
-            displayDmg(self.defendingPokemon[0], defenderMove, defenderDmg);
-            displayHP(self.activePokemon[0]);
-
-            if(self.activePokemon[0].hp < 0) {
-
-              // Trigger loss
-              self.lose();
-            }
-          }
-
-          function getDmg(pkmn1, pkmn2, move) {
-
-            var hitChance = move.accuracy;
-            var hit = Math.floor(Math.random()*100) + 1;
-
-            // If miss, 0 damage returned
-            if(hitChance <= hit)
-              return 0;
-
-            var rand = Math.random()*(1-0.85) + 0.85;
-            var typeMod;
-
-            switch(true) {
-
-              default:
-                typeMod = 1;
-                break;
-
-              case (move.type === 'lightning' && pkmn2.type === 'water') :
-                typeMod = 2;
-                break;
-
-              case (move.type === 'water' && pkmn2.type === 'lightning') :
-                typeMod = 0.5;
-                break;
-
-              case (move.type === 'rock' && pkmn2.type === 'lightning') :
-                typeMod = 2;
-                break;
-
-              case (move.type === 'lightning' && pkmn2.type === 'rock') :
-                typeMod = 0.5;
-                break;
-
-              case (move.type === 'water' && pkmn2.type === 'rock') :
-                typeMod = 2;
-                break;
-
-              case (move.type === 'normal' && pkmn2.type === 'rock') :
-                typeMod = 0.5;
-                break;
-
-            }
-
-            var modifier = typeMod * rand;
-            var dmg = Math.floor(((pkmn1.attack/pkmn2.defense) * move.power + 2) * modifier); // formula from wiki
-
-            return dmg;
-
-          }
-
-          function displayDmg(pkmn, move, dmg) {
-
-            var selector = '.rpg-'+pkmn.position+'-wrapper';
-            var msg = pkmn.name+' used '+move.name+'. ';
-
-            msg += dmg > 0 ? 'It did '+dmg+' damage!' : 'It missed!';
-            $(selector).find('.rpg-'+pkmn.position+'-alert').html(msg);
-
-          }
-
-          function displayHP(pkmn) {
-
-            var selector = '.rpg-'+pkmn.position+'-wrapper';
-            var $hp = $(selector).find('.rpg-hp');
-
-            $hp.html(pkmn.hp);
-
-          }
-
-          function drainPP(move) {
-
-            move.pp--;
-            $this.parent().siblings('td').html(move.pp);
-
-            if(move.pp === 0) {
-              move.disabled = true;
-              $this.addClass('disabled');
-            }
-
-          }
+          self.attack.init(index);
 
         });
 

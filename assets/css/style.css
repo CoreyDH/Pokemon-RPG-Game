@@ -64,6 +64,17 @@
   filter: FlipH;
   -ms-filter: "FlipH";
 }
+.rpg-active-items {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+.rpg-active-items td {
+  padding: 5px;
+}
+.rpg-item {
+  text-transform: capitalize;
+}
 
 /* Defending */
 .rpg-defender li {
@@ -97,4 +108,10 @@
 }
 .rpg-inactive li:hover {
   border: 1px solid #ff0000;
+}
+
+@media screen and (max-width: 960px) {
+  .rpg-active li, .rpg-defender li {
+    width: 99%;
+  }
 }
