@@ -524,9 +524,16 @@
 
       },
 
+      unloadItemsEvents: function() {
+
+        $('.rpg-active-items').off();
+
+      },
+
       unloadEvents: function() {
 
         this.unloadMovesEvents();
+        this.unloadItemsEvents();
         $('.rpg-active').find('.rpg-moves').off();
         $('.rpg-select li').off();
         $('.rpg-inactive li').off();
@@ -535,16 +542,23 @@
       },
 
       lose: function () {
+
         this.unloadMovesEvents();
+        this.unloadItemsEvents();
         this.loadRestartEvent();
+
         $('.rpg-active-alert').html(this.activePokemon[0].name+' has fainted! You lose. <button type="button">Try again?</button>');
 
       },
 
       win: function() {
+
         this.unloadMovesEvents();
+        this.unloadItemsEvents();
         this.loadRestartEvent();
+
         $('.rpg-active-alert').html(this.activePokemon[0].name+' has defeated all pokemon! You win!  <button type="button">Play again?</button>');
+
       },
 
       getRandomIndex: function (arr) {
