@@ -31,6 +31,14 @@
 .rpg-hp {
   font-size: 20px;
 }
+.rpg-settings {
+  color: #f1f1f1;
+  background: #222;
+  padding:5px;
+}
+.rpg-settings select {
+  color: #000;
+}
 
 /* Selection */
 .rpg-select li {

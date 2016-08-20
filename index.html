@@ -62,7 +62,48 @@
           <h2 class="text-center">Welcome to Pokemon Quick RPG</h2>
           <h3 class="text-center">Instruction</h3>
           <p>You'll begin the game choosing from among 4 different pokemon.  Once chosen you will have to face the remaining 3. If you manage to survive and defeat all 3 pokemon, victory is yours!<br /><br />
-            Note that you have potions and ethers to assist you in battle!</p><br />
+            Note that you have potions and ethers to assist you in battle!<br />
+            <ul>
+              <li><strong>Potions</strong> will heal you for 80%-100% of the pokemon's max HP.</li>
+              <li><strong>Ethers</strong> will restore 5 PP to all abilities.</li>
+            </ul>
+          </p><br />
+          <div class="col-md-12 rpg-settings">
+            <div class="col-md-2"><strong>Settings</strong></div>
+            <div class="col-md-4">
+              Potions
+              <select id="potions">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5" selected>5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              Ethers
+              <select id="ethers">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+            </div>
+            <div class="col-md-2"></div>
+          </div><br /><br />
             <div class="text-center"><a type="button" class="btn btn-success" data-dismiss="modal">Let's Play!</a></div>
         </div>
       </div>

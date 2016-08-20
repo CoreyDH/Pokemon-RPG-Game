@@ -158,7 +158,10 @@
         this.inactivePokemon = new Pokemon();
         this.activePokemon = [];
         this.defendingPokemon = [];
-        this.items = { potion: 5, ether: 3 };
+        this.items = {
+          potion: parseInt($( "#potions" ).val()),
+          ether: parseInt($( "#ethers" ).val())
+        };
 
         this.reset();
         this.loadItems();
@@ -551,7 +554,7 @@
     };
 
     game.init();
-    // $('#rpg-modal').modal('show');
+    $('#rpg-modal').modal('show');
 
   });
 
